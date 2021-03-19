@@ -11,6 +11,8 @@ doker*
 fandogh*
 Dockerfile
 .fandogh/
+.env
+
 # C extensions
 *.so
 # Distribution / packaging
@@ -114,6 +116,7 @@ celerybeat.pid
 # Environments
 # .env
 .env/
+
 .env
 
 .venv/
