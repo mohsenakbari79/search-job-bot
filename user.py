@@ -512,7 +512,7 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://telebot-job-search.herokuapp.com/' + TOKEN)
+    bot.set_webhook(url='https://telebot-search-job.herokuapp.com/' + TOKEN)
     return "!", 200
 
 
