@@ -11,22 +11,17 @@ import psycopg2
 import urllib.parse as urlparse
 import os
 
-url = urlparse.urlparse(os.environ['DATABASE_URL'])
-dbname = url.path[1:]
-user = url.username
-password = url.password
-host = url.hostname
-port = url.port
 
 connection = psycopg2.connect(
-            dbname=dbname,
-            user=user,
-            password=password,
-            host=host,
-            port=port
+            database=config('DATABASE_NAME'),
+            user=config('USER_DB'),
+            password=config('PASSWORD_DB'),
+            host=config('HOST_DB'),
+            port=config("PORT_DB")
             )
 
 cur = connection.cursor()
+print("true")
 
 try:
     cur.execute("""

@@ -24,26 +24,14 @@ server = Flask(__name__)
 
 class dbClass:
     def  __init__(self):
-        url = urlparse.urlparse(os.environ['DATABASE_URL'])
-        dbname = url.path[1:]
-        user = url.username
-        password = url.password
-        host = url.hostname
-        port = url.port
-        # self.conn =psycopg2.connect(
-        #     database=config('DATABASE_NAME'),
-        #     user=config('USER_DB'),
-        #     password=config('PASSWORD_DB'),
-        #     host=config('HOST_DB'),
-        #     port=config("PORT_DB")
-        # )
-        self.conn = psycopg2.connect(
-            dbname=dbname,
-            user=user,
-            password=password,
-            host=host,
-            port=port
-            )
+        self.conn =psycopg2.connect(
+            database=config('DATABASE_NAME'),
+            user=config('USER_DB'),
+            password=config('PASSWORD_DB'),
+            host=config('HOST_DB'),
+            port=config("PORT_DB")
+        )
+            
         self.cur = self.conn.cursor()
 
 class Jobinja:
@@ -55,11 +43,15 @@ class Jobinja:
             }
             site = self.s.get("https://jobinja.ir/login/user",headers=self.headers)
             bs_content = bs(site.content, "html5lib")
-            token = bs_content.find('input', {"name": "_token"})["value"]
+            token = bs_content.find('input', {"name": "r"})
+            
+            if not bool(token):
+                token = bs_content.find('input', {"name": "_token"})
+            token = token["value"]
             login_data = {
-                
-                            "identifier":os.environ['JOBINJA-USER'],
-                            "password":os.environ['JOBINJA-PASS'],
+
+                            "identifier":config('JOBINJA_USER'),
+                            "password":config('JOBINJA_PASS'),
                             "_token":token,
                             "remember_me":"on",
                             }
@@ -382,11 +374,14 @@ class SendNewPost:
             }
             site = self.s.get("https://jobinja.ir/login/user",headers=self.headers)
             bs_content = bs(site.content, "html5lib")
-            token = bs_content.find('input', {"name": "_token"})["value"]
+            token = bs_content.find('input', {"name": "r"})
+            if not bool(token):
+                token = bs_content.find('input', {"name": "_token"})
+            token = token["value"]
             login_data = {
                 
-                            "identifier":"malevin2020@gmail.com",
-                            "password":"saraxxxx123",
+                            "identifier":config('JOBINJA_USER'),
+                            "password":config('JOBINJA_PASS'),
                             "_token":token,
                             "remember_me":"on",
                             }
@@ -504,22 +499,11 @@ class SendNewPost:
 
 
 
-@server.route('/' + TOKEN, methods=['POST'])
-def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return  "!", 200
-
-@server.route("/")
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url='https://telebot-search-job.herokuapp.com/' + TOKEN)
-    return "!", 200
-
-
 if __name__ == "__main__":
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    bot.remove_webhook()
     post=SendNewPost()
     post.check_Send_Contect()
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
 
 bot.polling()
 
