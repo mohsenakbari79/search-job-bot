@@ -8,6 +8,8 @@ import psycopg2
 #             host=config('HOST_DB'),
 #             port=config("PORT_DB")
 #         )
+
+from decouple import config
 import urllib.parse as urlparse
 import os
 

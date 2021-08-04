@@ -12,6 +12,8 @@ fandogh*
 Dockerfile
 .fandogh/
 .env
+app/
+docker-compose.yml
 
 # C extensions
 *.so

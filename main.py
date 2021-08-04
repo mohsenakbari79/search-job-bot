@@ -498,6 +498,9 @@ class SendNewPost:
         print("finish_check")
 
 
+@server.route("/")
+def webhook():
+    return "salam ok", 200
 
 if __name__ == "__main__":
     bot.remove_webhook()
